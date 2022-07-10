@@ -1,6 +1,6 @@
-package com.liwenqiang;
+package com.master;
 
-import com.liwenqiang.Watcher.MasterWatcher;
+import com.Watcher.MasterWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +23,14 @@ public class Main {
             throw new RuntimeException(e);
         }
         MasterWatcher zk = new MasterWatcher(configProp.getProperty("hostPort"));
-        Thread.sleep(Integer.parseInt(configProp.getProperty("threadSleep")));
+        zk.startZk();
+        zk.runForMaster();
+        if (zk.isLeader) {
+            logger.info("I'm the leader");
+            Thread.sleep(60000);
+        }else {
+            logger.info("someone else is the leader");
+        }
+        zk.stopZk();
     }
 }
